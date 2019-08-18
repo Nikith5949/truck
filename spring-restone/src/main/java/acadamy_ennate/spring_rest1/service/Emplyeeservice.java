@@ -2,7 +2,6 @@ package acadamy_ennate.spring_rest1.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import javax.management.relation.RelationNotFoundException;
 
@@ -20,22 +19,25 @@ public class Emplyeeservice implements Employeeser{
 
 	
 	
+	
+
+
 
 	@Override
 	public List<Employee> findall() {
 	
 	
-		return (List<Employee>) er.findAll();
+		return er.findall();
 	}
 
 	@Override
 	public Employee findone(String id) {
 	
-		Optional<Employee> existing=er.findById(id);
-		 if( !existing.isPresent()) {
+		 Employee e=er.findone(id);
+		 if( e==null) {
 			 throw new EmployeeNotFoundException("Employee with id"+id+"Not found");
 		 }else {
-			return existing.get(); 
+			return e; 
 		 }
 	
 		
@@ -45,12 +47,12 @@ public class Emplyeeservice implements Employeeser{
 	@Transactional
 	public Employee create(Employee em) {
 		
-		Optional<Employee> e=er.findByEmailid(em.getEmailid());
+		 Employee e=er.findbyemail(em.getEmailid());
 		 System.out.println(e);
-		 if( e.isPresent()) {
+		 if( e!=null) {
 			 throw new EmployeeNotFoundException("Bad request");
 		 }else {
-			return er.save(em); 
+			return er.create(em); 
 		 }
 	
 	}
@@ -58,11 +60,11 @@ public class Emplyeeservice implements Employeeser{
 	@Override
 	@Transactional
 	public Employee update(String id, Employee em) {
-		Optional<Employee> e=er.findById(id);
-		 if( !e.isPresent()) {
+		Employee e=er.findone(id);
+		 if( e==null) {
 			 throw new EmployeeNotFoundException("Employee with id"+id+"Not found");
 		 }else {
-			return er.save(em); 
+			return er.update(em); 
 		 }
 	
 	}
@@ -70,15 +72,14 @@ public class Emplyeeservice implements Employeeser{
 	@Override
 	@Transactional
 	public void delete(String id) {
-		Optional<Employee> e=er.findById(id);
-		 if( !e.isPresent()) {
+		Employee e=er.findone(id);
+		 if( e==null) {
 			 throw new EmployeeNotFoundException("Employee with id"+id+"Not found");
 		 }else {
-			er.delete(e.get()); 
+			er.delete(e); 
 		 }
 	
 	}
-
 
 	
 
